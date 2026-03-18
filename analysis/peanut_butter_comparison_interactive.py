@@ -192,7 +192,7 @@ def main():
         page_title="Nut Butter Comparison — The Nut Butter Ladder — FIS v0.9.1",
         heading="The Nut Butter Ladder",
         subtitle="Food Integrity Scale v0.9.1 &mdash; 6 nut butters and spreads, scores 0 to 34",
-        stacked_html=pio.to_html(fig_stacked, full_html=False, include_plotlyjs=True),
+        stacked_html=pio.to_html(fig_stacked, full_html=False, include_plotlyjs="cdn"),
         table_html=build_ingredient_table(products, "Product"),
         scatter_html=pio.to_html(fig_scatter, full_html=False, include_plotlyjs=False),
         afs_html=pio.to_html(fig_afs, full_html=False, include_plotlyjs=False),

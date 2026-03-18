@@ -227,7 +227,7 @@ def main():
         page_title="Electrolyte Drinks — The Hydration Spectrum — FIS v0.9.1",
         heading="The Hydration Spectrum",
         subtitle="Food Integrity Scale v0.9.1 &mdash; 7 electrolyte drinks, scores 4 to 62",
-        stacked_html=pio.to_html(fig_stacked, full_html=False, include_plotlyjs=True),
+        stacked_html=pio.to_html(fig_stacked, full_html=False, include_plotlyjs="cdn"),
         table_html=build_ingredient_table(products, "Drink"),
         scatter_html=pio.to_html(fig_scatter, full_html=False, include_plotlyjs=False),
         afs_html=pio.to_html(fig_afs, full_html=False, include_plotlyjs=False),

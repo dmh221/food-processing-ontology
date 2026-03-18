@@ -197,7 +197,7 @@ def main():
         page_title="Yogurt Comparison — The Diet Yogurt Paradox — FIS v0.9.1",
         heading="The Diet Yogurt Paradox",
         subtitle="Food Integrity Scale v0.9.1 &mdash; 6 yogurts, scores 0 to 51",
-        stacked_html=pio.to_html(fig_stacked, full_html=False, include_plotlyjs=True),
+        stacked_html=pio.to_html(fig_stacked, full_html=False, include_plotlyjs="cdn"),
         table_html=build_ingredient_table(products, "Yogurt"),
         scatter_html=pio.to_html(fig_scatter, full_html=False, include_plotlyjs=False),
         afs_html=pio.to_html(fig_afs, full_html=False, include_plotlyjs=False),

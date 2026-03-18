@@ -194,7 +194,7 @@ def main():
         page_title="Protein Bar Comparison — FIS v0.9.0",
         heading="Protein Bar Comparison",
         subtitle="Food Integrity Scale v0.9.0",
-        stacked_html=pio.to_html(fig_stacked, full_html=False, include_plotlyjs=True),
+        stacked_html=pio.to_html(fig_stacked, full_html=False, include_plotlyjs="cdn"),
         table_html=build_ingredient_table(products, "Bar"),
         scatter_html=pio.to_html(fig_scatter, full_html=False, include_plotlyjs=False),
         afs_html=pio.to_html(fig_afs, full_html=False, include_plotlyjs=False),
