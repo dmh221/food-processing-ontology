@@ -4,6 +4,14 @@ A domain-specific ontology and deterministic classification system for evaluatin
 
 Its core scoring framework, the **Food Integrity Scale (FIS)**, uses multi-axis deterministic rules to classify products from ingredient lists and nutrition panels, extending beyond binary NOVA-style labeling. Built from first principles using large-scale product data from four U.S. grocery retailers (28,000+ products).
 
+## The Problem
+
+Existing classification systems (NOVA, EPIC, Siga) share three structural failures:
+
+1. **Binary classification destroys information** — NOVA places Fanta and a yogurt with xanthan gum in the same group. Within what NOVA calls "ultra-processed," FIS scores range from 16 to 97.
+2. **Low inter-rater reliability** — Expert agreement on NOVA is ~0.33 Fleiss' kappa — specialists disagree more often than they agree.
+3. **Single-axis systems conflate mechanisms** — Nutrient profile, additive load, matrix disruption, and hyperpalatability engineering are four distinct exposures bundled under one label.
+
 <p align="center">
   <img src="docs/fis_hero.png" alt="FIS sub-score decomposition — protein bars and electrolyte drinks" width="900">
 </p>
@@ -15,14 +23,6 @@ Its core scoring framework, the **Food Integrity Scale (FIS)**, uses multi-axis 
 <p align="center">
   <img src="docs/fis_hero_electrolytes.png" alt="Electrolyte drinks — sodium vs processing scatter and AFS tier breakdown" width="900">
 </p>
-
-## The Problem
-
-Existing classification systems (NOVA, EPIC, Siga) share three structural failures:
-
-1. **Binary classification destroys information** — NOVA places Fanta and a yogurt with xanthan gum in the same group. Within what NOVA calls "ultra-processed," FIS scores range from 16 to 97.
-2. **Low inter-rater reliability** — Expert agreement on NOVA is ~0.33 Fleiss' kappa — specialists disagree more often than they agree.
-3. **Single-axis systems conflate mechanisms** — Nutrient profile, additive load, matrix disruption, and hyperpalatability engineering are four distinct exposures bundled under one label.
 
 ## System Architecture
 
