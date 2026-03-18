@@ -78,7 +78,7 @@ products = [
         "tier_b": ["potassium sorbate"],
         "tier_c": ["malic acid"],
         "flags_plain": "3 Tier A additives: sucralose, acesulfame K, artificial flavor \u2014 diet paradox begins",
-        "color": "#474747",
+        "color": "#8a8a9a",
     },
     {
         "name": "Light + Fit Greek", "sub": "Fat Free Banana Cream",
@@ -127,8 +127,8 @@ def chart_scatter():
         title=dict(text="Sugar vs. Processing", font=dict(size=14, color=SUBTEXT), x=0.5),
         xaxis=dict(title="Total Sugar (g per serving)", gridcolor=GRID, zeroline=False, range=[0, 24]),
         yaxis=dict(title="Composite Score", gridcolor=GRID, zeroline=False, range=[-5, 60]),
-        margin=dict(l=55, r=20, t=40, b=50),
-        height=420,
+        margin=dict(l=60, r=30, t=50, b=55),
+        height=440,
     )
     return fig
 

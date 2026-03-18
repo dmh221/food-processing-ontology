@@ -150,8 +150,8 @@ def chart_scatter():
         ),
         xaxis=dict(title="Sodium (mg per serving)", gridcolor=GRID, zeroline=False, range=[-30, 580]),
         yaxis=dict(title="Composite Score", gridcolor=GRID, zeroline=False, range=[-5, 72]),
-        margin=dict(l=55, r=20, t=40, b=50),
-        height=420,
+        margin=dict(l=60, r=30, t=50, b=55),
+        height=440,
     )
     return fig
 

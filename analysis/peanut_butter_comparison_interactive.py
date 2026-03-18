@@ -87,7 +87,7 @@ products = [
         "afs_a": 6, "afs_b": 4, "afs_c": 0,
         "tier_a": ["artificial flavor"], "tier_b": ["lecithin"], "tier_c": [],
         "flags_plain": "Sugar is ingredient #1 \u2014 vanillin (artificial) + lecithin push AFS to 10",
-        "color": "#474747",
+        "color": "#8a8a9a",
     },
 ]
 
@@ -123,8 +123,8 @@ def chart_scatter():
         title=dict(text="Fat vs. Processing", font=dict(size=14, color=SUBTEXT), x=0.5),
         xaxis=dict(title="Total Fat (g per serving)", gridcolor=GRID, zeroline=False, range=[5, 24]),
         yaxis=dict(title="Composite Score", gridcolor=GRID, zeroline=False, range=[-5, 44]),
-        margin=dict(l=55, r=20, t=40, b=50),
-        height=420,
+        margin=dict(l=60, r=30, t=50, b=55),
+        height=440,
     )
     return fig
 

@@ -27,7 +27,7 @@ BAR_COLORS = {
     4:  "#4a73c8",  # Larabar — medium blue
     6:  "#163fc7",  # GoMacro — royal blue
     28: "#042e99",  # Clif — deep navy
-    36: "#474747",  # Kind — grey
+    36: "#8a8a9a",  # Kind — light grey
     64: "#f7ff08",  # David — neon yellow
 }
 
@@ -128,11 +128,11 @@ def chart_scatter():
         ))
     fig.update_layout(
         **LAYOUT_DEFAULTS,
-        title=dict(text="Protein vs. Processing", font=dict(size=14, color=SUBTEXT), x=0.5),
-        xaxis=dict(title="Protein (g)", gridcolor=GRID, zeroline=False, range=[-2, 35]),
+        title=dict(text="Protein vs. Processing  (bubble = calories)", font=dict(size=14, color=SUBTEXT), x=0.5),
+        xaxis=dict(title="Protein (g)", gridcolor=GRID, zeroline=False, range=[-2, 32]),
         yaxis=dict(title="Composite Score", gridcolor=GRID, zeroline=False, range=[-5, 75]),
-        margin=dict(l=55, r=20, t=40, b=50),
-        height=420,
+        margin=dict(l=60, r=30, t=50, b=55),
+        height=440,
     )
     return fig
 

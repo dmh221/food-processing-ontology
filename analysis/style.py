@@ -117,8 +117,8 @@ def build_stacked_bar(products, y_max):
             yanchor="top", y=-0.22, xanchor="center", x=0.5,
             traceorder="reversed",
         ),
-        margin=dict(l=60, r=30, t=20, b=130),
-        height=520,
+        margin=dict(l=60, r=30, t=30, b=130),
+        height=530,
     )
     return fig
 
@@ -167,8 +167,8 @@ def build_afs_breakdown(products):
             font=dict(size=10), orientation="h",
             yanchor="top", y=-0.15, xanchor="center", x=0.5,
         ),
-        margin=dict(l=120, r=20, t=40, b=70),
-        height=420,
+        margin=dict(l=130, r=30, t=50, b=75),
+        height=440,
     )
     return fig
 
