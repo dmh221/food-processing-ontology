@@ -8,6 +8,14 @@ Built in response to the FDA/USDA's 2025 Request for Information on defining ult
   <img src="docs/fis_hero.png" alt="FIS sub-score decomposition — protein bars and electrolyte drinks" width="900">
 </p>
 
+<p align="center">
+  <img src="docs/fis_hero_protein_bars.png" alt="Protein bars — protein vs processing scatter and AFS tier breakdown" width="900">
+</p>
+
+<p align="center">
+  <img src="docs/fis_hero_electrolytes.png" alt="Electrolyte drinks — sodium vs processing scatter and AFS tier breakdown" width="900">
+</p>
+
 ## Why FIS Exists
 
 Existing classification systems (NOVA, EPIC, Siga) share three structural failures:
