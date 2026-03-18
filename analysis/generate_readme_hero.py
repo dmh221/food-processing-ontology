@@ -1,9 +1,10 @@
 """Generate README hero images — protein bars + electrolyte drinks.
 
-Produces three PNGs in docs/:
+Produces four PNGs in docs/:
   fis_hero.png              — stacked bar decomposition (both categories)
   fis_hero_protein_bars.png — scatter + AFS breakdown (protein bars)
   fis_hero_electrolytes.png — scatter + AFS breakdown (electrolyte drinks)
+  fis_reference.png         — sub-scores + classification tiers reference
 
 Run:  python analysis/generate_readme_hero.py
 """
@@ -25,9 +26,9 @@ GRID    = "#1e2028"
 TEXT    = "#e0e0e8"
 SUBTEXT = "#787888"
 
-# Sub-score colors — slightly brighter for static rendering
-C_MDS = "#9a8528"
-C_AFS = "#5535b0"
+# Sub-score colors — brighter for static rendering on dark bg
+C_MDS = "#b89e30"
+C_AFS = "#7b55d0"
 C_HES = "#606070"
 C_MLS = "#e8ef10"
 
@@ -283,12 +284,148 @@ def generate_drinks_detail():
     _save(fig, "fis_hero_electrolytes.png")
 
 
+# ── Image 4: Sub-scores + classification tiers reference ──────────────
+
+METAB_COLORS = {
+    "N0": "#8ab4d6", "N0+": "#4a73c8", "N1a": "#163fc7",
+    "N1b": "#042e99", "N2": "#d5c248", "N3": "#f7ff08",
+}
+
+SUB_SCORE_ROWS = [
+    ("MLS", C_MLS, "How extreme the nutrition label is \u2014 flagging high sugar, sodium, saturated fat, and energy-dense sweet formulations.", "0\u201320"),
+    ("MDS", C_MDS, "How many core ingredients have been replaced by industrial substitutes (modified starches, hydrogenated fats, HFCS, protein isolates).", "0\u201330"),
+    ("AFS", C_AFS, "How many chemical additives are stacked in \u2014 emulsifiers, preservatives, artificial colors, flavor enhancers.", "0\u201380"),
+    ("HES", C_HES, "How engineered the sweetener system is \u2014 sugar alcohols, non-nutritive sweeteners, and multi-sweetener blending strategies.", "0\u201320"),
+]
+
+PROCESSING_TIERS = [
+    ("C0",  "Clean",                        "0"),
+    ("C1",  "Clean, Minimal Markers",       "1\u20135"),
+    ("P1a", "Light Processing",             "6\u201315"),
+    ("P1b", "Moderate-Light Processing",    "16\u201325"),
+    ("P2a", "Moderate Processing",          "26\u201338"),
+    ("P2b", "Moderate-Heavy Processing",    "39\u201350"),
+    ("P3",  "Heavy Industrial Formulation", "51\u201375"),
+    ("P4",  "Ultra-Formulated",             "76+"),
+]
+
+METABOLIC_TIERS = [
+    ("N0",  "No Metabolic Load", "0"),
+    ("N0+", "Minimal",          "1\u20133"),
+    ("N1a", "Low",              "4\u20136"),
+    ("N1b", "Low-Moderate",     "7\u20138"),
+    ("N2",  "Moderate",         "9\u201314"),
+    ("N3",  "High",             "15+"),
+]
+
+
+def generate_reference():
+    fig = plt.figure(figsize=(14, 6.8))
+    fig.patch.set_facecolor(BG)
+
+    # ── Column positions (figure coords 0-1) ──
+    L_LABEL  = 0.05   # sub-score label
+    L_DESC   = 0.14   # description start
+    R_RANGE  = 0.96   # range right-aligned
+
+    # ── SUB-SCORES section ──
+    y = 0.94
+    fig.text(0.05, y, "SUB-SCORES", fontsize=9, color=SUBTEXT,
+             fontweight="600", fontfamily="monospace",
+             transform=fig.transFigure)
+    y -= 0.045
+
+    for label, color, desc, rng in SUB_SCORE_ROWS:
+        fig.text(L_LABEL, y, label, fontsize=11, color=color,
+                 fontweight="700", fontfamily="monospace",
+                 transform=fig.transFigure)
+        fig.text(L_DESC, y, desc, fontsize=9, color=TEXT,
+                 transform=fig.transFigure)
+        fig.text(R_RANGE, y, rng, fontsize=9, color=TEXT,
+                 ha="right", transform=fig.transFigure)
+        y -= 0.040
+
+    # Composite row (bold white)
+    fig.text(L_LABEL, y, "Composite", fontsize=11, color=TEXT,
+             fontweight="700", fontfamily="monospace",
+             transform=fig.transFigure)
+    fig.text(L_DESC + 0.03, y,
+             "MDS + AFS + HES + MLS. How far a product has moved from recognizable food.",
+             fontsize=9, color=TEXT, transform=fig.transFigure)
+    fig.text(R_RANGE, y, "0\u2013150", fontsize=9, color=TEXT,
+             ha="right", fontweight="700", transform=fig.transFigure)
+
+    # ── Separator line ──
+    y -= 0.055
+    line_y = y + 0.02
+    fig.add_artist(plt.Line2D([0.05, 0.96], [line_y, line_y],
+                              color=GRID, linewidth=0.8,
+                              transform=fig.transFigure, clip_on=False))
+
+    # ── CLASSIFICATION TIERS header ──
+    fig.text(0.05, y, "CLASSIFICATION TIERS", fontsize=9, color=SUBTEXT,
+             fontweight="600", fontfamily="monospace",
+             transform=fig.transFigure)
+    y -= 0.045
+
+    # Left table: Processing class
+    PL_LABEL = 0.05
+    PL_NAME  = 0.14
+    PL_RANGE = 0.48
+
+    fig.text(PL_LABEL, y, "Processing class", fontsize=9.5, color=TEXT,
+             fontweight="700", transform=fig.transFigure)
+    fig.text(PL_LABEL + 0.165, y, "\u2014 derived from composite score",
+             fontsize=8.5, color=SUBTEXT, transform=fig.transFigure)
+
+    # Right table: Metabolic class
+    ML_LABEL = 0.54
+    ML_NAME  = 0.63
+    ML_RANGE = 0.96
+
+    fig.text(ML_LABEL, y, "Metabolic class", fontsize=9.5, color=TEXT,
+             fontweight="700", transform=fig.transFigure)
+    fig.text(ML_LABEL + 0.155, y, "\u2014 derived from MLS",
+             fontsize=8.5, color=SUBTEXT, transform=fig.transFigure)
+
+    y -= 0.045
+
+    # Draw processing tiers (left)
+    py = y
+    for tier, name, rng in PROCESSING_TIERS:
+        cc = CLASS_COLORS.get(tier, TEXT)
+        fig.text(PL_LABEL, py, tier, fontsize=10, color=cc,
+                 fontweight="700", fontfamily="monospace",
+                 transform=fig.transFigure)
+        fig.text(PL_NAME, py, name, fontsize=9, color=TEXT,
+                 transform=fig.transFigure)
+        fig.text(PL_RANGE, py, rng, fontsize=9, color=TEXT,
+                 ha="right", transform=fig.transFigure)
+        py -= 0.040
+
+    # Draw metabolic tiers (right)
+    my = y
+    for tier, name, rng in METABOLIC_TIERS:
+        mc = METAB_COLORS.get(tier, TEXT)
+        fig.text(ML_LABEL, my, tier, fontsize=10, color=mc,
+                 fontweight="700", fontfamily="monospace",
+                 transform=fig.transFigure)
+        fig.text(ML_NAME, my, name, fontsize=9, color=TEXT,
+                 transform=fig.transFigure)
+        fig.text(ML_RANGE, my, rng, fontsize=9, color=TEXT,
+                 ha="right", transform=fig.transFigure)
+        my -= 0.040
+
+    _save(fig, "fis_reference.png")
+
+
 # ── Main ───────────────────────────────────────────────────────────────
 
 def main():
     generate_hero()
     generate_bars_detail()
     generate_drinks_detail()
+    generate_reference()
 
 
 if __name__ == "__main__":

@@ -28,46 +28,11 @@ FIS is fully deterministic: same inputs always produce the same score. Inter-rat
 
 ## Architecture
 
-Four independent sub-scores sum to a composite:
-
-| Sub-score | Range | What it measures |
-|-----------|-------|-----------------|
-| **MDS** (Matrix Disruption) | 0–30 | How far ingredients have been removed from whole-food origin — fractionated substrates, hydrogenated fats, protein isolates |
-| **AFS** (Additive/Formulation) | 0–80 | Additive load by severity tier (A/B/C) and density — emulsifiers, preservatives, artificial colors, NNS |
-| **HES** (Hyperpalatability Engineering) | 0–20 | Sweetener stacking, sugar alcohol blending, multi-sweetener systems |
-| **MLS** (Metabolic Load) | 0–20 | Physiological burden from nutrition panel — sugar, sodium, saturated fat, energy density |
-
-**Composite** = MDS + AFS + HES + MLS (0–150)
+Four independent sub-scores sum to a composite (0–150):
 
 <p align="center">
-  <img src="docs/fis_subscore_grid.png" alt="Sub-score distributions" width="700">
+  <img src="docs/fis_reference.png" alt="FIS sub-scores and classification tiers" width="900">
 </p>
-
-### Processing Tiers (from composite score)
-
-| Tier | Name | Score Range |
-|------|------|-------------|
-| W | Whole Food | — |
-| Wp | Whole Prepped | — |
-| C0 | Clean | 0 |
-| C1 | Clean, Minimal Markers | 1–5 |
-| P1a | Light Processing | 6–15 |
-| P1b | Moderate-Light | 16–25 |
-| P2a | Moderate | 26–38 |
-| P2b | Moderate-Heavy | 39–50 |
-| P3 | Heavy Industrial | 51–75 |
-| P4 | Ultra-Formulated | 76+ |
-
-### Metabolic Tiers (from MLS)
-
-| Tier | Score Range |
-|------|-------------|
-| N0 | 0 |
-| N0+ | 1–3 |
-| N1a | 4–6 |
-| N1b | 7–8 |
-| N2 | 9–14 |
-| N3 | 15+ |
 
 <p align="center">
   <img src="docs/fis_processing_vs_metabolic.png" alt="Processing vs Metabolic scatter" width="700">
