@@ -95,10 +95,8 @@ Four-axis scoring engine
 Classification (10 processing tiers, 6 metabolic tiers)
 ```
 
-Fully deterministic: same inputs always produce the same score. Inter-rater reliability is 1.0 by construction.
-
 <p align="center">
-  <img src="docs/fis_subscore_grid.png" alt="Sub-score relationship scatter" width="700">
+  <img src="docs/fis_score_distribution.png" alt="FIS score distribution — stacked histogram by processing tier with NOVA Group 4 bracket" width="900">
 </p>
 
 ## The Ontology
