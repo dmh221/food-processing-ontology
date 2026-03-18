@@ -30,12 +30,42 @@ FIS is fully deterministic: same inputs always produce the same score. Inter-rat
 
 Four independent sub-scores sum to a composite (0–150):
 
-<p align="center">
-  <img src="docs/fis_reference.png" alt="FIS sub-scores and classification tiers" width="900">
-</p>
+| Sub-score | What it measures | Range |
+|-----------|-----------------|-------|
+| **MLS** | How extreme the nutrition label is — flagging high sugar, sodium, saturated fat, and energy-dense sweet formulations. | 0–20 |
+| **MDS** | How many core ingredients have been replaced by industrial substitutes (modified starches, hydrogenated fats, HFCS, protein isolates). | 0–30 |
+| **AFS** | How many chemical additives are stacked in — emulsifiers, preservatives, artificial colors, flavor enhancers. | 0–80 |
+| **HES** | How engineered the sweetener system is — sugar alcohols, non-nutritive sweeteners, and multi-sweetener blending strategies. | 0–20 |
+| **Composite** | MDS + AFS + HES + MLS. How far a product has moved from recognizable food. | **0–150** |
+
+### Classification Tiers
+
+**Processing class** — derived from composite score:
+
+| Tier | Name | Score |
+|------|------|-------|
+| C0 | Clean | 0 |
+| C1 | Clean, Minimal Markers | 1–5 |
+| P1a | Light Processing | 6–15 |
+| P1b | Moderate-Light Processing | 16–25 |
+| P2a | Moderate Processing | 26–38 |
+| P2b | Moderate-Heavy Processing | 39–50 |
+| P3 | Heavy Industrial Formulation | 51–75 |
+| P4 | Ultra-Formulated | 76+ |
+
+**Metabolic class** — derived from MLS:
+
+| Tier | Name | Score |
+|------|------|-------|
+| N0 | No Metabolic Load | 0 |
+| N0+ | Minimal | 1–3 |
+| N1a | Low | 4–6 |
+| N1b | Low-Moderate | 7–8 |
+| N2 | Moderate | 9–14 |
+| N3 | High | 15+ |
 
 <p align="center">
-  <img src="docs/fis_processing_vs_metabolic.png" alt="Processing vs Metabolic scatter" width="700">
+  <img src="docs/fis_subscore_grid.png" alt="Sub-score relationship scatter" width="700">
 </p>
 
 ## Interactive Demos
