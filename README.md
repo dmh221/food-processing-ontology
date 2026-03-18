@@ -1,0 +1,135 @@
+# Food Integrity Scale (FIS)
+
+A multi-axis, continuous scoring system for food processing classification. FIS takes a product's ingredient list and nutrition panel and produces a composite score from 0 to 150, classifying products into 10 processing tiers and 6 metabolic tiers.
+
+Built in response to the FDA/USDA's 2025 Request for Information on defining ultra-processed foods. Where NOVA puts Fanta and a yogurt with xanthan gum in the same group, FIS produces a 3x score difference and explains *why* through four independent sub-scores.
+
+<p align="center">
+  <img src="docs/fis_tier_examples.png" alt="FIS tier examples" width="700">
+</p>
+
+## Why FIS Exists
+
+Existing classification systems (NOVA, EPIC, Siga) share three structural failures:
+
+1. **Binary classification destroys information** — NOVA Group 4 spans products scoring 6 to 150+ on FIS
+2. **Low inter-rater reliability** — Expert agreement on NOVA is ~0.33 Fleiss' kappa
+3. **Single-axis systems can't distinguish mechanisms** — Nutrient profile, additive load, matrix disruption, and hyperpalatability engineering are separate exposures that need separate measurement
+
+FIS is fully deterministic: same inputs always produce the same score. Inter-rater reliability is 1.0 by construction.
+
+## Architecture
+
+Four independent sub-scores sum to a composite:
+
+| Sub-score | Range | What it measures |
+|-----------|-------|-----------------|
+| **MDS** (Matrix Disruption) | 0–30 | How far ingredients have been removed from whole-food origin — fractionated substrates, hydrogenated fats, protein isolates |
+| **AFS** (Additive/Formulation) | 0–80 | Additive load by severity tier (A/B/C) and density — emulsifiers, preservatives, artificial colors, NNS |
+| **HES** (Hyperpalatability Engineering) | 0–20 | Sweetener stacking, sugar alcohol blending, multi-sweetener systems |
+| **MLS** (Metabolic Load) | 0–20 | Physiological burden from nutrition panel — sugar, sodium, saturated fat, energy density |
+
+**Composite** = MDS + AFS + HES + MLS (0–150)
+
+<p align="center">
+  <img src="docs/fis_subscore_grid.png" alt="Sub-score distributions" width="700">
+</p>
+
+### Processing Tiers (from composite score)
+
+| Tier | Name | Score Range |
+|------|------|-------------|
+| W | Whole Food | — |
+| Wp | Whole Prepped | — |
+| C0 | Clean | 0 |
+| C1 | Clean, Minimal Markers | 1–5 |
+| P1a | Light Processing | 6–15 |
+| P1b | Moderate-Light | 16–25 |
+| P2a | Moderate | 26–38 |
+| P2b | Moderate-Heavy | 39–50 |
+| P3 | Heavy Industrial | 51–75 |
+| P4 | Ultra-Formulated | 76+ |
+
+### Metabolic Tiers (from MLS)
+
+| Tier | Score Range |
+|------|-------------|
+| N0 | 0 |
+| N0+ | 1–3 |
+| N1a | 4–6 |
+| N1b | 7–8 |
+| N2 | 9–14 |
+| N3 | 15+ |
+
+<p align="center">
+  <img src="docs/fis_processing_vs_metabolic.png" alt="Processing vs Metabolic scatter" width="700">
+</p>
+
+## Interactive Demos
+
+Pre-built interactive HTML comparisons (open in any browser):
+
+- **[Protein Bars](demos/protein_bars.html)** — 6 bars from C0 (Larabar, score 4) to P3 (David, score 64). More protein doesn't mean more processing.
+- **[Yogurt](demos/yogurt.html)** — The diet yogurt paradox: Light+Fit (score 51) is the most processed yogurt despite having the least sugar.
+- **[Peanut Butter](demos/peanut_butter.html)** — The nut butter ladder: from Smucker's Natural (score 0) to Nutella (score 34).
+- **[Electrolytes](demos/electrolytes.html)** — The hydration spectrum: LMNT (score 4) to Pedialyte Sport (score 62). Same promise, 15x score spread.
+
+To regenerate:
+```bash
+python analysis/bar_comparison_interactive.py
+python analysis/yogurt_comparison_interactive.py
+python analysis/peanut_butter_comparison_interactive.py
+python analysis/electrolyte_comparison_interactive.py
+```
+
+## Setup
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Run Tests
+
+The test suite (280 tests) validates the scoring engine with hardcoded fixtures — no external data needed:
+
+```bash
+python -m pytest tests/ -v
+```
+
+## Scoring Your Own Data
+
+1. Place scraped product JSON in `data/scraped/` (format: list of objects with `name`, `ingredients`, `nutrition` fields)
+2. Uncomment/add entries in `STORE_FILES` in `run_scoring.py`
+3. Run: `python run_scoring.py`
+
+Taxonomy classification requires an Anthropic API key (`ANTHROPIC_API_KEY` env var) for Claude Haiku. Use `--no-llm` to skip LLM classification (products get fallback labels).
+
+## Project Structure
+
+```
+scoring/
+  ontology.py          # Additive/ingredient ontology (Tier A/B/C, Bucket 2/3, sweeteners)
+  scorer.py            # Main scoring pipeline — FIS composite from sub-scores
+  rules_mds.py         # Matrix Disruption Score
+  rules_afs.py         # Additive/Formulation Score
+  rules_hes.py         # Hyperpalatability Engineering Score
+  rules_mls.py         # Metabolic Load Score
+  product_taxonomy.py  # LLM-based product family classification (Claude Haiku)
+  micro_label.py       # Fine-grained product sub-labels (regex + LLM)
+  normalize.py         # Ingredient text normalization
+  anchors.csv          # Known-product validation anchors
+tests/                 # 280 unit + integration tests
+analysis/              # Interactive comparison generators (Plotly)
+docs/                  # Methodology paper + figures
+demos/                 # Pre-built interactive HTML visualizations
+```
+
+## Methodology
+
+See [docs/methodology.md](docs/methodology.md) for the full methodology paper, including validation against NOVA, sensitivity analysis, and findings from scoring 27,680 products across four U.S. grocery retailers.
+
+## License
+
+MIT

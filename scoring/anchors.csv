@@ -1,0 +1,10 @@
+product_name_pattern,expected_class_min,expected_class_max,notes
+organic bananas,W,W,whole fruit
+avocado,W,W,whole fruit
+plain yogurt,C0,P1a,milk + cultures
+english muffin,C0,P2a,bread with minimal additives
+fanta,P2b,P4,artificial dyes + natural flavors; HFCS scored by MDS only (v0.7.0)
+sunkist zero,P2a,P4,aspartame + Red 40 + acesulfame K (no caloric sweetener lowers HES)
+dr pepper,P1a,P4,soda with caramel color (B) + natural flavors; HFCS scored by MDS only
+coca-cola,P1a,P4,soda with caramel color (B) + natural flavor
+doritos,P2b,P4,chips with additives; modified starch/corn syrup scored by MDS only (v0.7.0)
