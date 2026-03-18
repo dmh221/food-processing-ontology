@@ -1,16 +1,22 @@
 # Food Processing Ontology
 
-A domain-specific ontology and deterministic classification system for evaluating food processing, additive formulation, hyperpalatability engineering, and metabolic load across real-world consumer products.
+Ontology and deterministic classification system for food processing, with multi-axis scoring across real-world consumer products.
 
-Its core scoring framework, the **Food Integrity Scale (FIS)**, uses multi-axis deterministic rules to classify products from ingredient lists and nutrition panels, extending beyond binary NOVA-style labeling. Built from first principles using large-scale product data from four U.S. grocery retailers (28,000+ products).
+The core scoring framework, the **Food Integrity Scale (FIS)**, uses deterministic multi-axis rules to classify products from ingredient lists and nutrition panels, evaluating additive formulation, hyperpalatability engineering, and metabolic load.
+
+Fully deterministic by construction: identical inputs always produce identical outputs. Designed to operate on noisy, real-world ingredient data with inconsistent labeling formats across retailers.
+
+Built from first principles on 28,000+ products across four U.S. grocery retailers.
 
 ## The Problem
 
-Existing classification systems (NOVA, EPIC, Siga) share three structural failures:
+Consumers and policymakers do not have a reliable system for evaluating how processed a food product is. Ingredients lists and nutritional profiles can be inconsistent, difficult to interpret, or simply misleading.
 
-1. **Binary classification destroys information** — NOVA places Fanta and a yogurt with xanthan gum in the same group. Within what NOVA calls "ultra-processed," FIS scores range from 16 to 97.
-2. **Low inter-rater reliability** — Expert agreement on NOVA is ~0.33 Fleiss' kappa — specialists disagree more often than they agree.
-3. **Single-axis systems conflate mechanisms** — Nutrient profile, additive load, matrix disruption, and hyperpalatability engineering are four distinct exposures bundled under one label.
+Evaluating food processing is a multi-dimensional problem. Existing classification systems (NOVA, EPIC, Siga) share structural failures — binary classification destroys information and single-axis systems conflate mechanisms — and fail to capture a critical distinction for modern food products: processing vs. engineering.
+
+The food system in the U.S. is rapidly evolving — GLP-1s are reshaping consumption, functional and nutrient-dense foods are increasingly popular, and e-commerce is changing how people shop, including a stronger emphasis on whole foods and local sourcing. Policy and regulation move slowly. Behavior changes in real time.
+
+This system does not attempt to define what is healthy. It evaluates food processing and engineering directly — what ingredients are in a product, what those ingredients are and do, and how a product is constructed and engineered. A multi-dimensional system makes it possible to distinguish between products that are superficially similar but materially different.
 
 <p align="center">
   <img src="docs/fis_hero.png" alt="FIS sub-score decomposition — protein bars and electrolyte drinks" width="900">
@@ -23,36 +29,6 @@ Existing classification systems (NOVA, EPIC, Siga) share three structural failur
 <p align="center">
   <img src="docs/fis_hero_electrolytes.png" alt="Electrolyte drinks — sodium vs processing scatter and AFS tier breakdown" width="900">
 </p>
-
-## System Architecture
-
-```
-Product data (name, ingredients, nutrition, serving size)
-    |
-    v
-Ingredient normalization
-    Allergen stripping, enrichment context removal,
-    store-aware parsing, nesting depth analysis
-    |
-    v
-Taxonomy classification (11 families, 64 subfamilies)
-    LLM classifier (Claude Haiku) + deterministic fallback
-    SHA-256 cached to disk, version-gated
-    |
-    v
-Ontology pattern matching (174 regex patterns)
-    Tier A/B/C additives, Bucket 2/3 substrates,
-    HES sweetener/fat/flavor lists
-    |
-    v
-Four-axis scoring engine
-    MDS + AFS + HES + MLS = Composite (0-150)
-    |
-    v
-Classification (10 processing tiers, 6 metabolic tiers)
-```
-
-Fully deterministic: same inputs always produce the same score. Inter-rater reliability is 1.0 by construction.
 
 ### The Four Axes
 
@@ -91,19 +67,49 @@ Each axis captures a different dimension of processing that is not redundant wit
 | N2 | 9-14 | Moderate |
 | N3 | 15+ | High |
 
+## System Architecture
+
+```
+Product data (name, ingredients, nutrition, serving size)
+    |
+    v
+Ingredient normalization
+    Allergen stripping, enrichment context removal,
+    store-aware parsing, nesting depth analysis
+    |
+    v
+Taxonomy classification (11 families, 64 subfamilies)
+    LLM classifier (Claude Haiku) + deterministic fallback
+    SHA-256 cached to disk, version-gated
+    |
+    v
+Ontology pattern matching (174 regex patterns)
+    Tier A/B/C additives, Bucket 2/3 substrates,
+    HES sweetener/fat/flavor lists
+    |
+    v
+Four-axis scoring engine
+    MDS + AFS + HES + MLS = Composite (0-150)
+    |
+    v
+Classification (10 processing tiers, 6 metabolic tiers)
+```
+
+Fully deterministic: same inputs always produce the same score. Inter-rater reliability is 1.0 by construction.
+
 <p align="center">
   <img src="docs/fis_subscore_grid.png" alt="Sub-score relationship scatter" width="700">
 </p>
 
 ## The Ontology
 
-The ingredient classification ontology contains **174 compiled regex patterns** organized into functional groups:
+The ingredient classification ontology contains **174 regex patterns** organized into functional groups:
 
 - **Additive tiers (AFS):** 46 Tier A (artificial dyes, strong emulsifiers, NNS), 54 Tier B (gums, preservatives, phosphates), 25 Tier C (conditional — citric acid, pectin, ascorbic acid). Tier C scores only when industrial context exists.
 - **Matrix disruption buckets (MDS):** 28 Bucket 2 (refined oils, starches, fiber isolates, dairy powders), 15 Bucket 3 (maltodextrin, HFCS, protein isolate, hydrogenated fats).
 - **Hyperpalatability patterns (HES):** 25 caloric sweeteners, 9 NNS, 5 flavor ingredients, 6 flavor enhancers, 5 coating fats. Six detection patterns evaluate ingredient *combinations*, not individual ingredients.
 
-Every pattern includes nesting depth analysis — maltodextrin as a carrier inside "mushroom powder (maltodextrin, mushroom extract)" receives reduced weight versus maltodextrin as a top-level ingredient.
+Every pattern includes nesting depth analysis — maltodextrin inside "mushroom powder (maltodextrin, mushroom extract)" receives reduced weight relative to a top-level ingredient.
 
 ## Example: Two Yogurts
 
@@ -128,29 +134,9 @@ NOVA classifies both as Group 4. FIS sees a 51-point gap: the "Light" yogurt nee
 
 ## Dataset
 
-Built on real-world product data scraped from major U.S. grocery retailers; designed for robustness to inconsistent ingredient lists and labeling formats.
+**28,000+ products** from U.S. grocery retailers spanning mass-market, full-service, specialty, and curated clean-food channels. **26,000+** with complete processing classifications after excluding non-food items and products with missing ingredient data.
 
-| Store | Products | Description |
-|-------|----------|-------------|
-| Target | 12,154 | Mass-market grocery |
-| Wegmans | 12,058 | Full-service supermarket |
-| Farm to People | 2,622 | Curated clean-food retailer |
-| Trader Joe's | 1,107 | Private-label specialty |
-
-**27,941 products** total. **26,074** with complete processing classifications after excluding non-food items and products with missing ingredient data.
-
-### Cross-Store Gradient
-
-The four stores form a consistent processing gradient that holds within nearly every food category:
-
-| Store | Mean Composite | Strict UPF (P2a+) | Whole Food (W+Wp) |
-|-------|---------------|-------|------|
-| Farm to People | 2.9 | 0.4% | 16.9% |
-| Trader Joe's | 11.5 | 4.7% | 12.4% |
-| Wegmans | 16.2 | 19.0% | 11.7% |
-| Target | 21.0 | 27.6% | 6.4% |
-
-Target's mean AFS is 3.4x Trader Joe's. The primary differentiator between stores is additive load, not matrix disruption — all conventional stores sell similar refined base ingredients, but Target layers significantly more additives on top.
+Designed for robustness to inconsistent ingredient lists and labeling formats across retailers.
 
 ## Interactive Demos
 
@@ -161,13 +147,17 @@ Target's mean AFS is 3.4x Trader Joe's. The primary differentiator between store
 
 ## Key Design Decisions
 
-**Why four axes, not one?** Processing-related harm involves mechanisms beyond nutrient composition — a controlled inpatient crossover trial found ~500 kcal/day overconsumption on ultra-processed diets matched on all macronutrients. Four axes let you see which dimension drives a product's classification.
+**Decomposition over classification**
+Processing is not a single dimension. The system decomposes it into independent axes (MDS, AFS, HES, MLS) so different mechanisms can be evaluated separately.
 
-**Why continuous, not categorical?** Within what NOVA calls Group 4, products score 16-97 in this system. Collapsing that to a binary label discards the signal that distinguishes a yogurt with one gum from Pillsbury Cinnamon Rolls.
+**Ontology-first, not model-first**
+The system is built on a hand-defined ingredient ontology (regex patterns with tiered weights), not a trained model. Every score is deterministic, auditable, and reproducible.
 
-**Why deterministic?** The scoring engine is pure regex + arithmetic. No model weights, no training data, no stochastic outputs. The LLM (Claude Haiku) is used only for taxonomy classification (what *kind* of food), not for scoring. Taxonomy results are cached to disk.
+**Context-sensitive scoring**
+Ingredients are not scored in isolation. The same ingredient can signal different things depending on context—nesting depth, co-occurrence with other ingredients, and product type all affect how it is evaluated.
 
-**Why nesting depth?** A preservative in a sub-ingredient list (depth 2) signals less about formulation intent than the same preservative at the top level (depth 0). Depth discounting prevents minor components from dominating scores.
+**Built on real-world data, not theory**
+The scoring rules were developed against 28,000+ grocery products and iterated based on observed behavior—adjusting caps, weights, and rules when the system failed to separate products as expected.
 
 ## Project Structure
 
