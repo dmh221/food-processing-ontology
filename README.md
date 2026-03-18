@@ -70,12 +70,12 @@ Four independent sub-scores sum to a composite (0–150):
 
 ## Interactive Demos
 
-Pre-built interactive HTML comparisons (open in any browser):
+Live interactive comparisons (hover, zoom, click):
 
-- **[Protein Bars](demos/protein_bars.html)** — 6 bars from C0 (Larabar, score 4) to P3 (David, score 64). More protein doesn't mean more processing.
-- **[Yogurt](demos/yogurt.html)** — The diet yogurt paradox: Light+Fit (score 51) is the most processed yogurt despite having the least sugar.
-- **[Peanut Butter](demos/peanut_butter.html)** — The nut butter ladder: from Smucker's Natural (score 0) to Nutella (score 34).
-- **[Electrolytes](demos/electrolytes.html)** — The hydration spectrum: LMNT (score 4) to Pedialyte Sport (score 62). Same promise, 15x score spread.
+- **[Protein Bars](https://dmh221.github.io/food-integrity-scale/demos/protein_bars.html)** — 6 bars from C0 (Larabar, score 4) to P3 (David, score 64). More protein doesn't mean more processing.
+- **[Yogurt](https://dmh221.github.io/food-integrity-scale/demos/yogurt.html)** — The diet yogurt paradox: Light+Fit (score 51) is the most processed yogurt despite having the least sugar.
+- **[Peanut Butter](https://dmh221.github.io/food-integrity-scale/demos/peanut_butter.html)** — The nut butter ladder: from Smucker's Natural (score 0) to Nutella (score 34).
+- **[Electrolytes](https://dmh221.github.io/food-integrity-scale/demos/electrolytes.html)** — The hydration spectrum: LMNT (score 4) to Pedialyte Sport (score 62). Same promise, 15x score spread.
 
 To regenerate:
 ```bash
