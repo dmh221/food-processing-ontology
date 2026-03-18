@@ -5,7 +5,7 @@ A multi-axis, continuous scoring system for food processing classification. FIS 
 Built in response to the FDA/USDA's 2025 Request for Information on defining ultra-processed foods. Where NOVA puts Fanta and a yogurt with xanthan gum in the same group, FIS produces a 3x score difference and explains *why* through four independent sub-scores.
 
 <p align="center">
-  <img src="docs/fis_tier_examples.png" alt="FIS tier examples" width="700">
+  <img src="docs/fis_hero.png" alt="FIS sub-score decomposition — protein bars and electrolyte drinks" width="900">
 </p>
 
 ## Why FIS Exists
@@ -92,7 +92,7 @@ pip install -r requirements.txt
 
 ## Run Tests
 
-The test suite (280 tests) validates the scoring engine with hardcoded fixtures — no external data needed:
+The test suite (256 tests) validates the scoring engine with hardcoded fixtures — no external data needed:
 
 ```bash
 python -m pytest tests/ -v
@@ -121,7 +121,9 @@ scoring/
   normalize.py         # Ingredient text normalization
   anchors.csv          # Known-product validation anchors
 tests/                 # 280 unit + integration tests
-analysis/              # Interactive comparison generators (Plotly)
+analysis/
+  style.py             # Shared design system — palette, layout, chart builders
+  *_interactive.py     # Category comparison generators (Plotly)
 docs/                  # Methodology paper + figures
 demos/                 # Pre-built interactive HTML visualizations
 ```

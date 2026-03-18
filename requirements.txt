@@ -2,4 +2,5 @@ pandas>=2.0
 pyarrow>=14.0
 tqdm>=4.65
 plotly>=5.18
+matplotlib>=3.8
 anthropic>=0.18
