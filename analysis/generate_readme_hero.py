@@ -1,10 +1,11 @@
 """Generate README hero images — protein bars + electrolyte drinks.
 
-Produces four PNGs in docs/:
+Produces five PNGs in docs/:
   fis_hero.png              — stacked bar decomposition (both categories)
   fis_hero_protein_bars.png — scatter + AFS breakdown (protein bars)
   fis_hero_electrolytes.png — scatter + AFS breakdown (electrolyte drinks)
   fis_reference.png         — sub-scores + classification tiers reference
+  fis_subscore_grid.png     — 2x2 sub-score relationship scatter (from data)
 
 Run:  python analysis/generate_readme_hero.py
 """
@@ -18,6 +19,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import numpy as np
+
+try:
+    import pandas as pd
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
 
 # ── Palette (matches style.py) ─────────────────────────────────────────
 BG      = "#0d0d0d"
@@ -38,6 +45,7 @@ C_TIER_B = "#3060e0"
 C_TIER_C = "#707080"
 
 CLASS_COLORS = {
+    "W": "#4a5a2a", "Wp": "#4a5a2a",
     "C0": "#65763c", "C1": "#8da554",
     "P1a": "#b5c45a", "P1b": "#d5c248",
     "P2a": "#d4943a", "P2b": "#c8603a",
@@ -419,6 +427,74 @@ def generate_reference():
     _save(fig, "fis_reference.png")
 
 
+# ── Image 5: Sub-score relationship grid (from scored data) ───────────
+
+PARQUET_PATH = Path(__file__).resolve().parent.parent.parent / "grocery-scraper" / "output" / "scored" / "scored_products.parquet"
+
+# Processing class order + colors for legend
+PROC_ORDER = ["W", "Wp", "C0", "C1", "P1a", "P1b", "P2a", "P2b", "P3", "P4"]
+
+def generate_subscore_grid():
+    if not HAS_PANDAS:
+        print("Skipping subscore grid — pandas not available")
+        return
+    if not PARQUET_PATH.exists():
+        print(f"Skipping subscore grid — {PARQUET_PATH} not found")
+        return
+
+    df = pd.read_parquet(PARQUET_PATH)
+    df = df[df["product_type"] != "non_food"].copy()
+    df = df[df["processing_class"].isin(PROC_ORDER)].copy()
+    df = df.dropna(subset=["mds", "afs", "hes", "mls"])
+
+    # Map class → color + sort order
+    df["_color"] = df["processing_class"].map(CLASS_COLORS)
+    df["_order"] = df["processing_class"].map({c: i for i, c in enumerate(PROC_ORDER)})
+    df = df.dropna(subset=["_color"])
+    df = df.sort_values("_order")  # paint lower tiers first
+
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10),
+                             gridspec_kw={"hspace": 0.30, "wspace": 0.28})
+    fig.patch.set_facecolor(BG)
+
+    panels = [
+        (axes[0, 0], "mds", "afs", "Matrix Disruption (MDS, 0\u201330)", "Additive/Formulation (AFS, 0\u201380)", (0, 32), (0, 82)),
+        (axes[0, 1], "mds", "hes", "Matrix Disruption (MDS, 0\u201330)", "Hyperpalatability (HES, 0\u201320)", (0, 32), (0, 21)),
+        (axes[1, 0], "afs", "hes", "Additive/Formulation (AFS, 0\u201380)", "Hyperpalatability (HES, 0\u201320)", (0, 82), (0, 21)),
+        (axes[1, 1], "afs", "mls", "Additive/Formulation (AFS, 0\u201380)", "Metabolic Load (MLS, 0\u201320)", (0, 82), (0, 21)),
+    ]
+
+    for ax, xk, yk, xlabel, ylabel, xlim, ylim in panels:
+        ax.set_facecolor(PANEL)
+        for spine in ax.spines.values():
+            spine.set_color(GRID)
+            spine.set_linewidth(0.5)
+        ax.tick_params(axis="both", colors=SUBTEXT, labelsize=8)
+        ax.grid(True, color=GRID, linewidth=0.4, alpha=0.6)
+
+        ax.scatter(df[xk], df[yk],
+                   c=df["_color"], s=8, alpha=0.55, edgecolors="none", zorder=3)
+        ax.set_xlim(xlim)
+        ax.set_ylim(ylim)
+        ax.set_xlabel(xlabel, fontsize=9, color=SUBTEXT, labelpad=6)
+        ax.set_ylabel(ylabel, fontsize=9, color=SUBTEXT, labelpad=6)
+
+    # Shared legend at bottom
+    from matplotlib.lines import Line2D
+    handles = [Line2D([0], [0], marker="o", color="none",
+                      markerfacecolor=CLASS_COLORS[c], markersize=7, label=c)
+               for c in PROC_ORDER]
+    fig.legend(handles=handles, loc="lower center", ncol=len(PROC_ORDER),
+               fontsize=8.5, frameon=False, labelcolor=TEXT,
+               handletextpad=0.3, columnspacing=1.0,
+               bbox_to_anchor=(0.5, 0.01))
+
+    fig.suptitle("Food Integrity Scale \u2014 Sub-Score Relationships",
+                 fontsize=14, color=TEXT, fontweight="600", y=0.97)
+
+    _save(fig, "fis_subscore_grid.png")
+
+
 # ── Main ───────────────────────────────────────────────────────────────
 
 def main():
@@ -426,6 +502,7 @@ def main():
     generate_bars_detail()
     generate_drinks_detail()
     generate_reference()
+    generate_subscore_grid()
 
 
 if __name__ == "__main__":
