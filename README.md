@@ -111,11 +111,12 @@ Every pattern includes nesting depth analysis — maltodextrin inside "mushroom 
 
 ## Example: Two Yogurts
 
-**Fage Total 5% Plain** — Composite: **0** (C0)
+**Fage Total 0% Blueberry** — Composite: **16** (P1b)
 ```
-Ingredients: Grade A pasteurized skimmed milk and cream, live active
-yogurt cultures
-MDS: 0  |  AFS: 0  |  HES: 0  |  MLS: 0
+Ingredients: Grade A pasteurized skimmed milk, live active yogurt
+cultures, blueberries, sugar, water, pectin, locust bean gum,
+natural flavors, lemon juice concentrate
+MDS: 3  |  AFS: 9  |  HES: 4  |  MLS: 0
 ```
 
 **Dannon Light + Fit Greek Fat Free Banana Cream** — Composite: **51** (P3)
@@ -128,7 +129,7 @@ potassium sorbate
 MDS: 8  |  AFS: 36  |  HES: 7  |  MLS: 0
 ```
 
-NOVA classifies both as Group 4. FIS sees a 51-point gap: the "Light" yogurt needs sucralose, acesulfame K, artificial flavors, modified starch, and a preservative to taste like yogurt again. Its MLS is 0 — nothing left to flag metabolically — but it carries more additives than many candy bars.
+NOVA classifies both as Group 4. FIS sees a 35-point gap: the Fage Blueberry has a fruit preparation with natural flavor, one gum, and pectin. The "Light" yogurt needs sucralose, acesulfame K, artificial flavors, modified starch, and a preservative to taste like yogurt again. Its MLS is 0 — nothing left to flag metabolically — but it carries more additives than many candy bars.
 
 ## Dataset
 

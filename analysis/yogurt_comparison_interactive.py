@@ -35,6 +35,17 @@ products = [
         "color": "#f5e6c8",
     },
     {
+        "name": "Fage Total 0%", "sub": "Blueberry",
+        "composite": 16, "mds": 3, "afs": 9, "hes": 4, "mls": 0,
+        "class": "P1b",
+        "ingredients": "Grade A pasteurized skimmed milk, live active yogurt cultures (L. bulgaricus, S. thermophilus, L. acidophilus, Bifidus, L. casei), blueberries, sugar, water, pectin, locust bean gum, natural flavors, lemon juice concentrate",
+        "sugar_g": 16, "calories": 120, "protein_g": 12,
+        "afs_a": 3, "afs_b": 4, "afs_c": 2,
+        "tier_a": ["natural flavor"], "tier_b": ["locust bean gum"], "tier_c": ["pectin"],
+        "flags_plain": "Same brand, add blueberry prep \u2014 natural flavor, locust bean gum, pectin, juice concentrate. NOVA jumps 1\u21924",
+        "color": "#5a7ad4",
+    },
+    {
         "name": "Siggi\u2019s", "sub": "Lowfat Strawberry Banana",
         "composite": 9, "mds": 0, "afs": 5, "hes": 4, "mls": 0,
         "class": "P1a",
@@ -137,7 +148,7 @@ def chart_scatter():
 
 ANALYSIS_HTML = f"""\
   <p style="color:{TEXT};font-weight:600;font-size:1.05em;margin-bottom:16px">
-    Six yogurts, scores 0 to 51. The one marketed as &ldquo;Light&rdquo; is the most processed.
+    Seven yogurts, scores 0 to 51. The one marketed as &ldquo;Light&rdquo; is the most processed.
     Plain Greek yogurt with 5 ingredients scores 0; Light&thinsp;+&thinsp;Fit &mdash; engineered
     to remove fat and sugar &mdash; needs sucralose, acesulfame&nbsp;K, artificial flavors, modified
     starch, and a preservative to taste like yogurt again.
@@ -147,6 +158,9 @@ ANALYSIS_HTML = f"""\
   <ul style="padding-left:20px;margin:0 0 20px 0">
     <li>Fage Total 5% (0) is the baseline &mdash; milk and cultures, nothing else. Whole-milk fat
         is present but the ingredient list is as short as yogurt gets.</li>
+    <li>Fage Total 0% Blueberry (16) is the same brand with a blueberry fruit preparation &mdash;
+        natural flavor, locust bean gum, pectin, and lemon juice concentrate push it to P1b.
+        NOVA jumps from Group&nbsp;1 to Group&nbsp;4 for adding a fruit prep.</li>
     <li>Siggi&rsquo;s (9) introduces the first formulation markers: natural flavors and fruit pectin.
         Still clean by most standards, but FIS detects the step.</li>
     <li>Chobani&rsquo;s &ldquo;fruit on the bottom&rdquo; (20) reveals that the &ldquo;fruit&rdquo;
@@ -196,7 +210,7 @@ def main():
     html = build_page(
         page_title="Yogurt Comparison — The Diet Yogurt Paradox — FIS v0.9.1",
         heading="The Diet Yogurt Paradox",
-        subtitle="Food Integrity Scale v0.9.1 &mdash; 6 yogurts, scores 0 to 51",
+        subtitle="Food Integrity Scale v0.9.1 &mdash; 7 yogurts, scores 0 to 51",
         stacked_html=pio.to_html(fig_stacked, full_html=False, include_plotlyjs="cdn"),
         table_html=build_ingredient_table(products, "Yogurt"),
         scatter_html=pio.to_html(fig_scatter, full_html=False, include_plotlyjs=False),
